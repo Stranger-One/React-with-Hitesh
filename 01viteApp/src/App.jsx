@@ -1,8 +1,9 @@
+import Hello from "./Hello"
 
 function App() {
 
   return (
-    <h1>Chai aur react with vite | Dola</h1>
+    <Hello/>
   )
 }
 
