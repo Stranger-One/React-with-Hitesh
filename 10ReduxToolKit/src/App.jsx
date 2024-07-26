@@ -6,12 +6,15 @@ import Todos from './components/Todos'
 function App() {
   const [saveOrAdd, setSaveOrAdd] = useState('Add Todo')
   const [inputText, setInputText] = useState('')
+  const [onEdit, setOnEdit] = useState(false)
 
   const todoProps = {
     setSaveOrAdd,
     saveOrAdd,
     inputText,
-    setInputText
+    setInputText,
+    setOnEdit,
+    onEdit
   };
 
   return (

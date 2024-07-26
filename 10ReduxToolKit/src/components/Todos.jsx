@@ -5,7 +5,7 @@ import { FaPen } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 
-function Todos({saveOrAdd, setSaveOrAdd, inputText, setInputText}) {
+function Todos({saveOrAdd, setSaveOrAdd, inputText, setInputText, setOnEdit, onEdit}) {
     const todos = useSelector(state => state.todos)
     const dispatch = useDispatch()
 
@@ -14,6 +14,7 @@ function Todos({saveOrAdd, setSaveOrAdd, inputText, setInputText}) {
         dispatch(setEditId(id))
         setSaveOrAdd('Save')
         setInputText(text)
+        // setOnEdit(true)
     }
 
     // console.log(todos)
@@ -23,7 +24,7 @@ function Todos({saveOrAdd, setSaveOrAdd, inputText, setInputText}) {
             <ul className="list-none">
                 {todos.map((todo) => (
                     <li
-                        className="w-full mt-4 flex justify-between items-center bg-zinc-800 px-4 py-2 rounded"
+                        className={`w-full mt-4 flex justify-between items-center bg-zinc-800 px-4 py-2 rounded ${onEdit ? "opacity-40 pointer-events-none" : ""} `}
                         key={todo.id}
                     >
                         <div className='text-white'>{todo.text}</div>
