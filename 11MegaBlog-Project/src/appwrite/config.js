@@ -102,7 +102,7 @@ export class StorageServices{
                 file
             )
         } catch (error) {
-            console.log("Appwrite :: upload file :: error", error)
+            console.log("Appwrite :: upload file :: error ", error)
         }
     }
 
