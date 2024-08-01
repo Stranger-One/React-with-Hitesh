@@ -95,14 +95,18 @@ export class StorageServices{
 
     // file upload services
     async uploadFile(file){
+        console.log("upload", file)
         try {
-            return await this.bucket.createFile(
+            const result = await this.bucket.createFile(
                 conf.appwriteBucketId,
                 ID.unique(),
                 file
             )
+            console.log("file uploaded successfully", result)
+            return result;
         } catch (error) {
-            console.log("Appwrite :: upload file :: error ", error)
+            console.log("Appwrite :: uploadFile :: error", error);
+            return false
         }
     }
 

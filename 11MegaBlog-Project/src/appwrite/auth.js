@@ -20,6 +20,7 @@ export class AuthService {
 
             if (userAccount) {
                 // Login User
+                console.log("Account Created",userAccount)
                 return this.login({ email, password})
             } else {
                 return userAccount
@@ -32,7 +33,9 @@ export class AuthService {
 
     async login({ email, password }) {
         try {
-            return await this.account.createEmailPasswordSession(email, password)
+            const result = await this.account.createEmailPasswordSession(email, password)
+            result && console.log("login successfully", result)
+            return result
         } catch (error) {
             console.log("Appwrite :: login :: error", error)
         }
