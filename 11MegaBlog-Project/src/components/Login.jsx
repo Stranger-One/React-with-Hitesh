@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux'
 import Logo from './Logo'
 import Input from './Input'
 import Button from '../components/Button'
+import Loader from '../components/Loader.jsx';
+
 
 
 
@@ -15,8 +17,11 @@ function Login() {
     const dispatch = useDispatch()
     const { register, handleSubmit } = useForm()
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const login = async (data) => {
+        setLoading(true)
+
         setError('')
         try {
             const session = await authService.login(data)
@@ -31,6 +36,7 @@ function Login() {
         } catch (error) {
             setError(error.message)
         }
+        setLoading(false)
     }
 
     return (
@@ -79,7 +85,7 @@ function Login() {
                         <Button
                             type="submit"
                             className="w-full"
-                        >Sign in</Button>
+                        >{loading ? <Loader /> : 'Sign in'}</Button>
                     </div>
                 </form>
             </div>

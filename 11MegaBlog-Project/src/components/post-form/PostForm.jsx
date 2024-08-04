@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from '../Button'
 import Input from '../Input'
@@ -7,8 +7,16 @@ import Select from '../Select'
 import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Loader from '../../components/Loader.jsx';
+
 
 export default function PostForm({ post }) {
+    const [imgUrl, setImgUrl] = useState(null);
+    const [loading, setLoading] = useState(false)
+
+
+    // console.log("props", post);
+
     const { register, handleSubmit, watch, setValue, control, getValues } = useForm({
         defaultValues: {
             title: post?.title || "",
@@ -20,8 +28,18 @@ export default function PostForm({ post }) {
 
     const navigate = useNavigate();
     const userData = useSelector((state) => state.auth.userData);
+    // console.log(userData)
+
+
+    if (post) {
+        appwriteService.getImagePreview(post.featuredImage).then((url) => {
+            setImgUrl(url);
+        })
+    }
+
 
     const submit = async (data) => {
+        setLoading(true)
         // console.log(data)
         if (post) {
             const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null;
@@ -39,9 +57,9 @@ export default function PostForm({ post }) {
                 navigate(`/post/${dbPost.$id}`);
             }
         } else {
-            console.log("data",data.image[0])
+            // console.log("data", data)
             const file = await appwriteService.uploadFile(data.image[0]);
-            console.log("submit",file)
+            // console.log("submit", file)
 
             if (file) {
                 const fileId = file.$id;
@@ -53,6 +71,7 @@ export default function PostForm({ post }) {
                 }
             }
         }
+        setLoading(false)
     };
 
     const slugTransform = useCallback((value) => {
@@ -76,6 +95,8 @@ export default function PostForm({ post }) {
         return () => subscription.unsubscribe();
     }, [watch, slugTransform, setValue]);
 
+
+
     return (
         <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
             <div className="w-2/3 px-2">
@@ -84,6 +105,8 @@ export default function PostForm({ post }) {
                     placeholder="Title"
                     className="mb-4"
                     {...register("title", { required: true })}
+                    value={post?.title}
+
                 />
                 <Input
                     label="Slug :"
@@ -93,8 +116,9 @@ export default function PostForm({ post }) {
                     onInput={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
                     }}
+                    value={post?.$id}
                 />
-                <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
+                <RTE label="Content :" name="content" control={control} defaultValue={post ? post.content : getValues("content")} />
             </div>
             <div className="w-1/3 px-2">
                 <Input
@@ -107,7 +131,7 @@ export default function PostForm({ post }) {
                 {post && (
                     <div className="w-full mb-4">
                         <img
-                            src={appwriteService.getFilePreview(post.featuredImage)}
+                            src={imgUrl}
                             alt={post.title}
                             className="rounded-lg"
                         />
@@ -120,7 +144,7 @@ export default function PostForm({ post }) {
                     {...register("status", { required: true })}
                 />
                 <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {post ? "Update" : "Submit"}
+                {loading ? <Loader /> : post ? "Update" : "Submit"}
                 </Button>
             </div>
         </form>

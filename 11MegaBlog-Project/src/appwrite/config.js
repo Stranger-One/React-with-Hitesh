@@ -62,7 +62,7 @@ export class StorageServices{
                 conf.appwriteCollectionId,
                 slug
             )
-            return ture
+            return true
         } catch (error) {
             console.log("Appwrite :: delete :: error", error)
             return false
@@ -83,11 +83,13 @@ export class StorageServices{
 
     async getAllPost( query = [Query.equal("status", "active")] ){
         try {
-            return await this.database.listDocuments(
+            const allPost = await this.database.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 query
             )
+            // console.log("all posts", allPost);
+            return allPost
         } catch (error) {
             console.log("Appwrite :: get all post :: error", error)
         }
@@ -123,12 +125,14 @@ export class StorageServices{
         }
     }
 
-    async getFilePreview(fileId){
+    async getImagePreview(fileId){
         try {
-            return this.getFilePreview(
+            const imageUlr =  this.bucket.getFilePreview(
                 conf.appwriteBucketId,
                 fileId
             )
+            // console.log(imageUlr.href);
+            return imageUlr.href
         } catch (error) {
             console.log("Appwrite :: get file preview :: error", error)
         }

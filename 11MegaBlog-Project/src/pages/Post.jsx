@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 export default function Post() {
     const [post, setPost] = useState(null);
+    const [imgUrl, setImgUrl] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
 
@@ -33,12 +34,18 @@ export default function Post() {
         });
     };
 
+    if(post){
+        appwriteService.getImagePreview(post.featuredImage).then((url) => {
+            setImgUrl(url);
+        })
+    }
+
     return post ? (
         <div className="py-8">
             <Container>
                 <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
                     <img
-                        src={appwriteService.getFilePreview(post.featuredImage)}
+                        src={imgUrl}
                         alt={post.title}
                         className="rounded-xl"
                     />

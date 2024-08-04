@@ -21,11 +21,12 @@ function EditPost() {
         }
         
     }, [slug, navigate])
+    // console.log("EditPost", posts);
 
   return posts ? (
     <div className="py-8">
         <Container>
-            <PostForm />
+            <PostForm post={posts} />
         </Container>
     </div>
   ) : null
